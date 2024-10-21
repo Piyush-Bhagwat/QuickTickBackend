@@ -2,38 +2,35 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,  // Removes extra spaces
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-  },
-  password: {
-    type: String,
+  profile: {
+    type: Schema.Types.ObjectId,
+    ref: 'Profile',
     required: true,
   },
-  phoneNumber: {
+  rollNo: {
     type: String,
     required: true,
     unique: true,
     trim: true,
   },
-  role: {
+  course: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
+    required: true,
+    trim: true,
+  },
+  courseYear: {
+    type: Number,
+    required: true,
   },
   registeredEvents: [
     {
       eventId: { type: Schema.Types.ObjectId, ref: 'Event' },
-      registrationDate: { type: Date, default: Date.now }, 
-      paymentStatus: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' },
+      registrationDate: { type: Date, default: Date.now },
+      paymentStatus: { 
+        type: String, 
+        enum: ['paid', 'unpaid'], 
+        default: 'unpaid' 
+      },
     },
   ],
   createdAt: {
@@ -46,10 +43,11 @@ const userSchema = new Schema({
   },
 });
 
-// Middleware to update 'updatedAt' automatically
+// Middleware to update 'updatedAt'
 userSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
-module.exports = mongoose.model('User', userSchema);
+const userModel = mongoose.model('User', userSchema);
+module.exports = userModel;

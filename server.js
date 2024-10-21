@@ -5,6 +5,7 @@ const { router: userRouter } = require("./src/routes/route.user");
 
 app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
         credentials: true,
